@@ -1,0 +1,2 @@
+numpy @ file:///private/tmp/numpy-20240108-5731-uciys2/numpy-1.26.3
+Pygments @ file:///private/tmp/pygments-20231121-5274-1rlyumb/pygments-2.17.2
