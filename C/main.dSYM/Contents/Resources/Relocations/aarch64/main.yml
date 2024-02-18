@@ -1,0 +1,9 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/dineshchhantyal/Documents/prime-emerging/C/main'
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _calculate_primes, symObjAddr: 0x0, symBinAddr: 0x100003C78, symSize: 0x214 }
+  - { offsetInCU: 0x6C, offset: 0x6C, size: 0x8, addend: 0x0, symName: _calculate_primes, symObjAddr: 0x0, symBinAddr: 0x100003C78, symSize: 0x214 }
+  - { offsetInCU: 0x158, offset: 0x158, size: 0x8, addend: 0x0, symName: _try_10, symObjAddr: 0x214, symBinAddr: 0x100003E8C, symSize: 0xA8 }
+  - { offsetInCU: 0x1C2, offset: 0x1C2, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x2BC, symBinAddr: 0x100003F34, symSize: 0x2C }
+...
