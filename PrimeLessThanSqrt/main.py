@@ -20,14 +20,6 @@ def main(n):
     return ct, t2 - t1
 
 
-def try_10():
-    for i in range(20):
-        count, time_taken = main(10**i)
-        print(i, count, time_taken)
-
-
-# try_10()
-
 def start(n):
     sqrt_n = int(n**0.5)
     prime_list = []
@@ -48,3 +40,10 @@ def start(n):
     return ct, t2 - t1
 
 
+def try_10():
+    for i in range(20):
+        count, time_taken = main(10**i)
+        print(i, count, time_taken)
+
+
+try_10()
