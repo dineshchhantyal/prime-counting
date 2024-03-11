@@ -1,6 +1,6 @@
 
-
 import time
+
 
 def calculate_root_n_prime(n):
     is_prime = [True] * (n+1)
@@ -12,6 +12,7 @@ def calculate_root_n_prime(n):
                 is_prime[j] = False
 
     return is_prime
+
 
 def sieve(n):
     if n < 2:
@@ -29,7 +30,8 @@ def sieve(n):
         segment_start = k
         for i in range(2, root_n):
             if root_primes[i]:
-                # Find the start value in the current segment for marking multiples
+                # Calculate the start of the segment
+                # that is divisible by i
                 start = max(i*i, (segment_start + i - 1) // i * i)
                 for j in range(start, k+size, i):
                     if j > n:
@@ -37,7 +39,9 @@ def sieve(n):
                     is_prime[j - segment_start] = False
         count += sum(is_prime)
 
-    count += sum(root_primes[2:])  # Directly count the primes, excluding 0 and 1
+    # Directly count the primes, excluding 0 and 1
+
+    count += sum(root_primes[2:])
 
     t2 = time.perf_counter()  # End timing
     return count, t2 - t1
