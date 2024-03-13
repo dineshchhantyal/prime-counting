@@ -1,6 +1,6 @@
 import os
 from sympy import primepi
-from Sieve.main import sieve
+from Sieve.classic import sieve
 
 with open(os.getcwd() + "/test.txt", "r") as f:
     for line in f:
