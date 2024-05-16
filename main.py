@@ -1,32 +1,55 @@
+from sympy import primepi
+import os
 import time
 
+from LessThanSqrt.main import lts
+from PrimeLessThanSqrt.main import prime_lts
+from Sieve.classic import sieve_classic
 
-def main(n):
-    sqrt_n = int(n**0.5)
-    prime_list = []
-    ct = 0
+# print user to select the method
+print("Select the method to calculate the number of prime numbers less than a given number:")
+print("1. Less than the square root method")
+print("2. Prime less than the square root method")
+print("3. Sieve of Eratosthenes method")
+method = int(input("Enter the number of the method: "))
 
-    t1 = time.time()
-    for i in range(2, n + 1):
-        prime = 1
-        for prime in prime_list:
-            if i % prime == 0:
-                prime = 0
-                break
-        if prime:
-            ct += 1
-            if i <= sqrt_n:
-                prime_list.append(i)
-    t2 = time.time()
-    return ct, t2 - t1
+method_func = None
 
+if method == 1:
+    method_func = lts
+elif method == 2:
+    method_func = prime_lts
+elif method == 3:
+    method_func = sieve_classic
+else:
+    print("Invalid method selected")
+    exit()
 
-def try_10():
-    for i in range(20):
-        count, time_taken = main(10**i)
-        print(i, count, time_taken)
+correct_ct = 0
+incorrect_ct = 0
 
+t1 = time.time()
+with open(os.getcwd() + "/test.txt", "r") as f:
+    for line in f:
+        num = int(line.strip())
+        ans = primepi(num)
+        main_ans, time_taken = method_func(num)
+        if ans == main_ans:
+            correct_ct += 1
+            print(f"""
+✔︎ {num}: ans = {ans} and time taken = {round(time_taken, 4)}
+""")
+        else:
+            incorrect_ct += 1
+            print(f"✘ {num}: expected = {ans} and got = {main_ans}")
 
-try_10()
+t2 = time.time()
+print("All tests completed")
+
+print(f"Total time taken: {round(t2 - t1, 4)}")
+print("Results:")
+print(f"Total tests: {correct_ct + incorrect_ct}")
+print(f"Correct: {correct_ct}")
+print(f"Incorrect: {incorrect_ct}")
 
 

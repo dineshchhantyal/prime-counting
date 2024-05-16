@@ -2,7 +2,9 @@ import math
 import time
 import numpy as np
 
-def prime_numbers(num):
+def lts(num):
+    time1 = time.time()
+
     ct = 0
     for i in range(2, num + 1):
         is_prime = True
@@ -13,18 +15,7 @@ def prime_numbers(num):
                 is_prime= False
         if is_prime:
             ct += 1
-    return ct
+    time2 = time.time()
 
-# start timer
-time1 = time.time()
+    return ct, time2 - time1
 
-# print(prime_numbers(1000000))  # [2, 3, 5, 7]
-
-print(prime_numbers(10**8))  # [2, 3, 5, 7]
-
-# end timer
-time2 = time.time()
-
-print('Time taken: ', time2 - time1, 'seconds')
-
-# primes = np.arange(2, 100000000)
