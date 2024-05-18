@@ -26,7 +26,7 @@ class P:
         """
         This function is used to calculate P2(x).
         """
-        return self.p2_calc(self.x)
+        return self.p2_calc(self.y + 1)
 
     def p2_calc(self, p):
         """
@@ -34,6 +34,7 @@ class P:
         """
 
         if p <= self.rot_x:
+            print(f"Calculating P2(x) for p = {p}")
             return self.p2_calc_1(p) + self.p2_calc(p + 1)
         else:
             return 0

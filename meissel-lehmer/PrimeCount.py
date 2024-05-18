@@ -4,7 +4,7 @@ prime numbers less than or equal to
 x using the Meissel-Lehmer algorithm.
 """
 
-import P
+from P import P
 
 
 class PrimeCount:
@@ -23,3 +23,5 @@ class PrimeCount:
 
         print("P2(x) calculated")
         print(f"P2({self.num}): {p2}")
+
+        return p2
