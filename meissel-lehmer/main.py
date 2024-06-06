@@ -8,5 +8,5 @@ if __name__ == "__main__":
     start = time.time()
     pc.count()
     end = time.time()
-    print(f"Time taken: {end-start} seconds")
-    print("The number of primes less than or equal to", num, "is", pc.count())
+
+    print(f"Time taken: {end - start} seconds")

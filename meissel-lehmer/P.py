@@ -11,9 +11,9 @@ from sympy import primepi as pi
 
 
 class P:
-    def __init__(self, x):
+    def __init__(self, x, y):
         self.x = x
-        self.y = x ** (1 / 3)
+        self.y = y
         self.rot_x = x ** (1 / 2)
 
     def _pk(self, k):
@@ -33,11 +33,11 @@ class P:
         This function is used to calculate P2(x).
         """
 
-        if p <= self.rot_x:
-            print(f"Calculating P2(x) for p = {p}")
-            return self.p2_calc_1(p) + self.p2_calc(p + 1)
-        else:
-            return 0
+        ans = 0
+        while p <= self.rot_x:
+            ans += self.p2_calc_1(p)
+            p += 1
+        return ans
 
     def p2_calc_1(self, p):
         """
