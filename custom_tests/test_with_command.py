@@ -2,7 +2,7 @@ from LessThanSqrt.main import lts
 from PrimeLessThanSqrt.main import prime_lts
 from Sieve.classic import sieve_classic
 from Sieve.partition import sieve as sieve_partitioned
-from tests.check_custom_data_set_by_method import test as check
+from custom_tests.check_custom_data_set_by_method import test as check
 
 import asyncio
 

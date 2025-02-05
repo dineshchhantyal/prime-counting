@@ -1,6 +1,6 @@
-from tests.test_with_command import test_with_command
-from tests.benchmark_with_command import benchmark_with_command
-from tests.benchmark_custom_dataset import benchmark_custom_dataset
+from custom_tests.test_with_command import test_with_command
+from custom_tests.benchmark_with_command import benchmark_with_command
+from custom_tests.benchmark_custom_dataset import benchmark_custom_dataset
 
 import asyncio
 
