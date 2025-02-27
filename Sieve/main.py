@@ -25,3 +25,11 @@ def sieve(n):
 
 
 
+def main():
+    num = int(input("Enter the number: "))
+    count, time_taken = sieve(num)
+    print(f"Number of primes: {count}")
+    print(f"Time taken: {time_taken:.4f} seconds")
+
+if __name__ == '__main__':
+    main()
