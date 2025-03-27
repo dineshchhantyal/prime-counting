@@ -1,8 +1,9 @@
 import time
+import numpy as np
 
 
 def calculate_root_n_prime(n):
-    is_prime = [True] * (n + 1)
+    is_prime = np.ones(n + 1, dtype=bool)
     is_prime[0] = is_prime[1] = False
 
     for i in range(2, int(n**0.5) + 1):
@@ -25,7 +26,7 @@ def sieve(n):
     size = 10**5
     count = 0
     for k in range(root_n + 1, n + 1, size):
-        is_prime = [True] * (min(n + 1, k + size) - k)
+        is_prime = np.ones((min(n + 1, k + size) - k), dtype=bool)
         segment_start = k
         for i in range(2, root_n):
             if root_primes[i]:
@@ -46,4 +47,4 @@ def sieve(n):
     return count, t2 - t1
 
 
-print(sieve(10**9))
+print(sieve(10**8))

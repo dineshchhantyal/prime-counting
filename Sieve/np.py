@@ -1,21 +1,69 @@
 import time
 import numpy as np
+from multiprocessing import Pool, cpu_count, shared_memory
+from numba import njit
+import math
+
+
+# JIT-compile this critical function for speed
+@njit
+def mark_segment(segment, segment_start, primes):
+    segment_size = len(segment)
+
+    # Handle even numbers in bulk (2's multiples)
+    if segment_start % 2 == 0:
+        segment[0::2] = False
+    else:
+        segment[1::2] = False
+
+    # Use wheel factorization - skip multiples of 2
+    for p_idx in range(1, len(primes)):  # Skip 2
+        p = primes[p_idx]
+
+        # Find first multiple of p in segment
+        start = (-(segment_start % p)) % p
+        if p * p > segment_start + start:
+            start = p * p - segment_start
+
+        if start < segment_size:
+            # Mark all multiples at once
+            segment[start::p] = False
+
+    return segment
+
 
 def calculate_root_n_prime(n):
-    # Use boolean dtype for memory efficiency
-    is_prime = np.ones(n + 1, dtype=np.bool_)
-    is_prime[0:2] = False  # 0 and 1 are not primes
+    limit = min(n, 10**8)  # Memory cap for larger numbers
+    is_prime = np.ones(limit + 1, dtype=np.bool_)
+    is_prime[0:2] = False
 
-    # Optimization for even numbers
-    is_prime[4::2] = False
-
-    # Only odd numbers need checking after 2
-    for i in range(3, int(n**0.5) + 1, 2):
+    # Only need to sieve up to sqrt(limit)
+    for i in range(2, int(math.sqrt(limit)) + 1):
         if is_prime[i]:
-            # Vectorized operation - mark all multiples at once
-            is_prime[i*i::i] = False
+            is_prime[i * i :: i] = False
 
-    return is_prime
+    return is_prime, np.nonzero(is_prime)[0]
+
+
+def process_segment(args):
+    segment_start, segment_end, shared_name, primes_size, batch_id = args
+    segment_size = segment_end - segment_start
+
+    # Get primes from shared memory
+    existing_shm = shared_memory.SharedMemory(name=shared_name)
+    primes = np.ndarray((primes_size,), dtype=np.int64, buffer=existing_shm.buf)
+
+    # Initialize segment
+    segment = np.ones(segment_size, dtype=np.bool_)
+
+    # Use JIT-compiled function for the heavy lifting
+    segment = mark_segment(segment, segment_start, primes)
+
+    # Clean up shared memory
+    existing_shm.close()
+
+    return np.sum(segment), batch_id
+
 
 def sieve(n):
     if n < 2:
@@ -23,58 +71,58 @@ def sieve(n):
 
     t1 = time.perf_counter()
 
-    root_n = int(n**0.5) + 1
-    root_primes = calculate_root_n_prime(root_n)
+    # Calculate sqrt(n) primes more efficiently
+    sqrt_n = int(math.sqrt(n)) + 1
+    root_primes_array, primes = calculate_root_n_prime(sqrt_n)
 
-    # Get prime numbers up to sqrt(n) for sieving
-    primes = np.nonzero(root_primes)[0]
-    small_prime_count = len(primes)
+    # Optimization: use shared memory for primes
+    primes_size = len(primes)
+    shm = shared_memory.SharedMemory(create=True, size=primes.nbytes)
+    shared_primes = np.ndarray(primes.shape, dtype=primes.dtype, buffer=shm.buf)
+    shared_primes[:] = primes[:]
 
-    # Process in memory-efficient segments
-    size = 10**6  # Larger chunks for better vectorization
-    count = 0
+    # Calculate optimal segment size
+    num_cores = cpu_count()
+    # Smaller segments for better cache locality
+    size = max(10**5, min(10**7, n // (num_cores * 20)))
 
-    for segment_start in range(root_n + 1, n + 1, size):
+    # Create segments with batch IDs for tracking
+    segments = []
+    batch_id = 0
+    for segment_start in range(sqrt_n + 1, n + 1, size):
         segment_end = min(n + 1, segment_start + size)
-        segment_size = segment_end - segment_start
+        segments.append((segment_start, segment_end, shm.name, primes_size, batch_id))
+        batch_id += 1
 
-        # Initialize segment
-        segment = np.ones(segment_size, dtype=np.bool_)
-
-        # Handle even numbers in bulk
-        if segment_start % 2 == 0:
-            segment[0::2] = False
-        else:
-            segment[1::2] = False
-
-        # Mark non-primes using vectorized operations
-        for p in primes[1:]:  # Skip 2, already handled even numbers
-            # Find first multiple of p in segment
-            start = (-(segment_start % p)) % p
-            if p * p > segment_start + start:
-                start = p * p - segment_start
-                if start >= segment_size:
-                    continue
-
-            # Mark all multiples at once
-            segment[start::p] = False
-
-        count += np.sum(segment)
+    # Use imap_unordered for better load balancing
+    count = 0
+    with Pool(processes=num_cores) as pool:
+        # Process results as they come in to avoid waiting for all
+        for segment_count, _ in pool.imap_unordered(
+            process_segment, segments, chunksize=1
+        ):
+            count += segment_count
 
     # Add primes below sqrt(n)
-    count += np.sum(root_primes)
+    count += np.sum(root_primes_array)
+
+    # Clean up shared memory
+    shm.close()
+    shm.unlink()
 
     t2 = time.perf_counter()
     return count, t2 - t1
 
-def main():
-    for i in range(21):  # 0 to 20
-        n = 10**i
-        count, time_taken = sieve(n)
-        print(f"10^{i} = {n}:")
-        print(f"Number of primes: {count}")
-        print(f"Time taken: {time_taken:.4f} seconds")
-        print("-" * 40)
 
-if __name__ == '__main__':
+def main():
+    n = 11
+
+    num = 10**n
+    count, time_taken = sieve(num)
+    print(f"Count of primes below 10^{n}: {count}")
+    print(f"Time taken: {time_taken:.6f} seconds")
+    print()
+
+
+if __name__ == "__main__":
     main()
