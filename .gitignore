@@ -1,2 +1,9 @@
-/prime_env
+**/prime_env/** */
 .vscode
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.pkl
+*.egg
+.venv

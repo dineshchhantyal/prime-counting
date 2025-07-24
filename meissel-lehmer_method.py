@@ -20,7 +20,7 @@ def erathosthenes_sieve(n):
 #         return 1
 #     result = n
 #     prime_num = erathosthenes_sieve(n)
-#     for num in prime_num:
+#     for num in prime_num:a
 #         if num*num > n:
 #             break
 #         if n%num==0:

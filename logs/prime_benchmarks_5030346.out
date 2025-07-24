@@ -1,0 +1,32 @@
+Benchmarking all prime counting methods...
+========================================
+Submitting job for method 1 (LessThanSqrt)
+========================================
+Submitted batch job 5030347
+Job for method 1 (LessThanSqrt) submitted.
+========================================
+========================================
+Submitting job for method 2 (PrimeLessThanSqrt)
+========================================
+Submitted batch job 5030348
+Job for method 2 (PrimeLessThanSqrt) submitted.
+========================================
+========================================
+Submitting job for method 3 (SieveClassic)
+========================================
+Submitted batch job 5030349
+Job for method 3 (SieveClassic) submitted.
+========================================
+========================================
+Submitting job for method 4 (SievePartitioned)
+========================================
+Submitted batch job 5030350
+Job for method 4 (SievePartitioned) submitted.
+========================================
+========================================
+Submitting job for method 5 (MeisselLehmer)
+========================================
+Submitted batch job 5030351
+Job for method 5 (MeisselLehmer) submitted.
+========================================
+All benchmarks submitted. Check logs/ for results.

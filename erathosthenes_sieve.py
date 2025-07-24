@@ -19,6 +19,6 @@ def erathosthenes_sieve(n):
             for j in range(i*i,n, i):
                 numbers[j-2] = 0
     return n-numbers.count(0)-2
-    # return numbers
+    # return numbers    
 
 print(erathosthenes_sieve(10**4))

@@ -44,6 +44,3 @@ def sieve(n):
 
     t2 = time.perf_counter()  # End timing
     return count, t2 - t1
-
-
-print(sieve(10**9))
